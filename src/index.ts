@@ -1,8 +1,8 @@
 import express from "express";
 import httpStatus from "http-status";
 import dotenv from "dotenv";
-import { addRoutes } from "./api/index.js";
-
+import { addRoutes } from "./api";
+import { connect } from "./db";
 dotenv.config();
 
 const port = process.env.PORT || 3000;
@@ -15,6 +15,8 @@ app.get("/", (req, res) => {
 });
 
 addRoutes(app);
+
+connect();
 
 app.listen(port, () => {
   console.log("Server is running on port :", port);
