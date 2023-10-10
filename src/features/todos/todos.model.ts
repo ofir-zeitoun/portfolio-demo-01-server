@@ -14,7 +14,6 @@ const todosSchema = new Schema(
 );
 
 export interface TodoDocument extends mongoose.Document, Timestamp {
-  _id: string;
   title: string;
   description: string | undefined;
   done: boolean | undefined;
