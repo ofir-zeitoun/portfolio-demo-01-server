@@ -41,3 +41,7 @@ export const updateTodoSchema = object({
 });
 
 export type UpdateTodoInput = TypeOf<typeof updateTodoSchema>;
+
+export const deleteTodoSchema = object(params);
+
+export type DeleteTodoInput = TypeOf<typeof deleteTodoSchema>;

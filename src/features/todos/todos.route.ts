@@ -5,8 +5,10 @@ import { validateResource } from "../../routes/middlewares";
 import { TodosModel } from "./todos.model";
 import {
   CreateTodoInput,
+  DeleteTodoInput,
   UpdateTodoInput,
   createTodoSchema,
+  deleteTodoSchema,
   updateTodoSchema,
 } from "./todos.route-schema";
 
@@ -41,4 +43,14 @@ router.put(
     res.status(status.OK).send(updated);
   }
 );
+
+router.delete(
+  "/:id",
+  validateResource(deleteTodoSchema),
+  async (req: Request<DeleteTodoInput["params"]>, res: Response) => {
+    const deleted = await TodosModel.findByIdAndRemove(req.params.id);
+    res.sendStatus(deleted === null ? status.NOT_FOUND : status.OK);
+  }
+);
+
 export const route = ["/api/todos", router] as [string, Router];
