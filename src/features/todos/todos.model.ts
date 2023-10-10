@@ -13,6 +13,11 @@ const todosSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-export interface TodoDocument extends mongoose.Document, Timestamp {}
+export interface TodoDocument extends mongoose.Document, Timestamp {
+  _id: string;
+  title: string;
+  description: string | undefined;
+  done: boolean | undefined;
+}
 
 export const TodosModel = mongoose.model<TodoDocument>("todos", todosSchema);

@@ -2,7 +2,7 @@ import { Router, Request, Response } from "express";
 import status from "http-status";
 import { validateResource } from "../../routes/middlewares";
 import { TodosModel } from "./todos.model";
-import { CreateTodoInput, createTodoSchema } from "./todos.schema";
+import { CreateTodoInput, createTodoSchema } from "./todos.route-schema";
 
 export const router = Router();
 
