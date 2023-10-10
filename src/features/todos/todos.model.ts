@@ -1,6 +1,7 @@
-import { Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
+import { Timestamp } from "../../db";
 
-export const Todos = new Schema(
+const todosSchema = new Schema(
   {
     _id: Schema.ObjectId,
     title: String,
@@ -11,3 +12,7 @@ export const Todos = new Schema(
   },
   { versionKey: false, timestamps: true }
 );
+
+export interface TodoDocument extends mongoose.Document, Timestamp {}
+
+export const TodosModel = mongoose.model<TodoDocument>("todos", todosSchema);

@@ -1,27 +1,23 @@
 import { Router, Request, Response } from "express";
 import status from "http-status";
-import mongoose from "mongoose";
-import { Todos } from "./todos.model";
+import { validateResource } from "../../routes/middlewares";
+import { TodosModel } from "./todos.model";
+import { CreateTodoInput, createTodoSchema } from "./todos.schema";
 
 export const router = Router();
 
-export let db: any[] = [];
-
 router.get("/", async (_req, res) => {
-  const todos = mongoose.model<typeof Todos>("todos");
-  const items = await todos.find({});
+  const items = await TodosModel.find({});
   res.status(status.OK).json(items);
 });
 
-router.post("/", async (req: Request, res: Response) => {
-  console.log("🚀 ~ file: todo.ts:14 ~ router.post ~ req.body:", req.body);
-  db = [...db, req.body];
-  if (!req.body.title) {
-    throw new Error("no title");
+router.post(
+  "/",
+  validateResource(createTodoSchema),
+  async (req: Request<{}, {}, CreateTodoInput["body"]>, res: Response) => {
+    const added = await TodosModel.insertMany(req.body);
+    res.status(status.OK).send(added);
   }
-  const todos = mongoose.model<typeof Todos>("todos");
-  const added = await todos.insertMany(req.body);
-  res.status(status.OK).send(added);
-});
+);
 
 export const route = ["/api/todos", router] as [string, Router];
