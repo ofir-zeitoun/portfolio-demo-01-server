@@ -15,7 +15,7 @@ export type CreateTodoInput = TypeOf<typeof createTodoSchema>;
 const params = {
   params: object({
     id: string({
-      required_error: "id is reuuired",
+      required_error: "id is required",
     }),
   }),
 };

@@ -22,7 +22,7 @@ router.get("/", async (_req, res) => {
 router.get(
   "/:id",
   validateResource(singleTodoSchema),
-  async (req: Request<SingleTodoInput["params"]>, res) => {
+  async (req: Request<SingleTodoInput["params"]>, res: Response) => {
     const item = await TodosModel.findById(req.params.id);
     res.status(status.OK).json(item);
   }
