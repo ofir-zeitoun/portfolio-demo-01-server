@@ -55,7 +55,11 @@ router.put(
       req.body,
       returnNew
     );
-    res.status(status.OK).send(updated);
+    if (updated) {
+      res.status(status.OK).send(updated);
+    } else {
+      res.sendStatus(status.NOT_FOUND);
+    }
   }
 );
 
