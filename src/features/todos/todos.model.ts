@@ -3,7 +3,6 @@ import { Timestamp } from "../../db";
 
 const todosSchema = new Schema(
   {
-    _id: Schema.ObjectId,
     title: String,
     description: { type: String, default: "" },
     done: { type: Boolean, default: false },

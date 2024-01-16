@@ -32,14 +32,8 @@ router.post(
   "/",
   validateResource(createTodoSchema),
   async (req: Request<{}, {}, CreateTodoInput["body"]>, res: Response) => {
-    // const added = new TodosModel(req.body);
-    // added._id = new Types.ObjectId();
-    // await added.save({ timestamps: true });
-    const { insertedIds } = await TodosModel.insertMany(req.body, {
-      rawResult: true,
-    });
-    const added = await TodosModel.findById(insertedIds[0]);
-    res.status(status.OK).send(added);
+    const newTodo = await TodosModel.create(req.body);
+    res.status(status.OK).send(newTodo);
   }
 );
 

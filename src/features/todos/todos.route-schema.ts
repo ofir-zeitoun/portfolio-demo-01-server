@@ -1,38 +1,39 @@
 import { boolean, object, string, TypeOf } from "zod";
 
-export const createTodoSchema = object({
-  body: object({
-    title: string({
-      required_error: "Title is required",
-    }),
-    description: string().optional(),
-    done: boolean().optional(),
+const baseTodoSchema = object({
+  id: string({
+    required_error: "id is required",
   }),
+  title: string({
+    required_error: "Title is required",
+  }),
+  description: string().optional(),
+  done: boolean().optional(),
+});
+
+const idField = { id: true } as const;
+
+const baseTodoSchemaNoId = baseTodoSchema.omit(idField);
+
+export const createTodoSchema = object({
+  body: baseTodoSchemaNoId,
 });
 
 export type CreateTodoInput = TypeOf<typeof createTodoSchema>;
 
 const params = {
-  params: object({
-    id: string({
-      required_error: "id is required",
-    }),
-  }),
-};
-
-const updateFields = {
-  title: string().optional(),
-  description: string().optional(),
-  done: boolean().optional(),
+  params: baseTodoSchema.pick(idField),
 };
 
 const updateTodoBody = {
-  body: object(updateFields).refine(
-    (data) => Object.keys(data).length > 0,
-    `must have at least one of the properties: ${Object.keys(updateFields).join(
-      " | "
-    )}`
-  ),
+  body: baseTodoSchemaNoId
+    .partial()
+    .refine(
+      (fields) => Object.values(fields).some((value) => value !== undefined),
+      `must have at least one of the properties: ${Object.keys(
+        baseTodoSchemaNoId
+      ).join(" | ")}`
+    ),
 };
 
 export const updateTodoSchema = object({
