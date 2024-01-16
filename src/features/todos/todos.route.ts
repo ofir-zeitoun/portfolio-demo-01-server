@@ -72,4 +72,4 @@ router.delete(
   }
 );
 
-export const route = ["/api/todos", router] as [string, Router];
+export default ["/api/todos", router] as [string, Router];
