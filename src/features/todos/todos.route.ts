@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import status from "http-status";
 import { returnNew } from "../../db";
 import { validateResource } from "../../routes/middlewares";
+import { setIn, setInBody, setInParams } from "../../utils";
 import { TodosModel } from "./todos.model";
 import {
   CreateTodoInput,
@@ -9,7 +10,7 @@ import {
   UpdateTodoInput,
   createTodoSchema,
   singleTodoSchema,
-  updateTodoSchema,
+  updateTodoBody,
 } from "./todos.route-schema";
 
 export const router = Router();
@@ -21,8 +22,8 @@ router.get("/", async (_req, res) => {
 
 router.get(
   "/:id",
-  validateResource(singleTodoSchema),
-  async (req: Request<SingleTodoInput["params"]>, res: Response) => {
+  validateResource(setInParams(singleTodoSchema)),
+  async (req: Request<SingleTodoInput>, res: Response) => {
     const item = await TodosModel.findById(req.params.id);
     res.status(status.OK).json(item);
   }
@@ -30,8 +31,8 @@ router.get(
 
 router.post(
   "/",
-  validateResource(createTodoSchema),
-  async (req: Request<{}, {}, CreateTodoInput["body"]>, res: Response) => {
+  validateResource(setInBody(createTodoSchema)),
+  async (req: Request<{}, {}, CreateTodoInput>, res: Response) => {
     const newTodo = await TodosModel.create(req.body);
     res.status(status.OK).send(newTodo);
   }
@@ -39,11 +40,8 @@ router.post(
 
 router.put(
   "/:id",
-  validateResource(updateTodoSchema),
-  async (
-    req: Request<UpdateTodoInput["params"], {}, UpdateTodoInput["body"]>,
-    res: Response
-  ) => {
+  validateResource(setIn(singleTodoSchema, updateTodoBody)),
+  async (req: Request<SingleTodoInput, {}, UpdateTodoInput>, res: Response) => {
     const updated = await TodosModel.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -59,8 +57,8 @@ router.put(
 
 router.delete(
   "/:id",
-  validateResource(singleTodoSchema),
-  async (req: Request<SingleTodoInput["params"]>, res: Response) => {
+  validateResource(setInParams(singleTodoSchema)),
+  async (req: Request<SingleTodoInput>, res: Response) => {
     const deleted = await TodosModel.findByIdAndRemove(req.params.id);
     res.sendStatus(deleted === null ? status.NOT_FOUND : status.OK);
   }

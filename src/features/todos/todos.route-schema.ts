@@ -1,4 +1,5 @@
-import { boolean, object, string, TypeOf } from "zod";
+import { AnyZodObject, boolean, object, string, TypeOf } from "zod";
+import { atLeastOnField } from "../../utils";
 
 const baseTodoSchema = object({
   id: string({
@@ -15,34 +16,14 @@ const idField = { id: true } as const;
 
 const baseTodoSchemaNoId = baseTodoSchema.omit(idField);
 
-export const createTodoSchema = object({
-  body: baseTodoSchemaNoId,
-});
+export const createTodoSchema = baseTodoSchemaNoId;
 
 export type CreateTodoInput = TypeOf<typeof createTodoSchema>;
 
-const params = {
-  params: baseTodoSchema.pick(idField),
-};
+export const updateTodoBody = atLeastOnField(baseTodoSchemaNoId);
 
-const updateTodoBody = {
-  body: baseTodoSchemaNoId
-    .partial()
-    .refine(
-      (fields) => Object.values(fields).some((value) => value !== undefined),
-      `must have at least one of the properties: ${Object.keys(
-        baseTodoSchemaNoId
-      ).join(" | ")}`
-    ),
-};
+export const singleTodoSchema = baseTodoSchema.pick(idField);
 
-export const updateTodoSchema = object({
-  ...params,
-  ...updateTodoBody,
-});
-
-export type UpdateTodoInput = TypeOf<typeof updateTodoSchema>;
-
-export const singleTodoSchema = object(params);
+export type UpdateTodoInput = TypeOf<typeof updateTodoBody>;
 
 export type SingleTodoInput = TypeOf<typeof singleTodoSchema>;
