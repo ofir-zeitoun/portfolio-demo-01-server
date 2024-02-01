@@ -1,4 +1,5 @@
 import { Express } from "express";
+import "express-yields";
 import { healthCheck } from "../features/health-check";
 import { catchAllRequestsLastRouteHandler, errorHandler } from "./middlewares";
 import todos from "../features/todos";
