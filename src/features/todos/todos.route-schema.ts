@@ -1,4 +1,4 @@
-import { AnyZodObject, boolean, object, string, TypeOf } from "zod";
+import { boolean, object, string, TypeOf } from "zod";
 import { atLeastOnField } from "../../utils";
 
 const baseTodoSchema = object({
@@ -22,8 +22,8 @@ export type CreateTodoInput = TypeOf<typeof createTodoSchema>;
 
 export const updateTodoBody = atLeastOnField(baseTodoSchemaNoId);
 
-export const singleTodoSchema = baseTodoSchema.pick(idField);
+export const IdOnlySchema = baseTodoSchema.pick(idField);
 
 export type UpdateTodoInput = TypeOf<typeof updateTodoBody>;
 
-export type SingleTodoInput = TypeOf<typeof singleTodoSchema>;
+export type IdOnlyInput = TypeOf<typeof IdOnlySchema>;

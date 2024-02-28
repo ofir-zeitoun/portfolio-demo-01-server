@@ -6,10 +6,10 @@ import { setIn, setInBody, setInParams } from "../../utils";
 import { TodosModel } from "./todos.model";
 import {
   CreateTodoInput,
-  SingleTodoInput,
+  IdOnlyInput,
   UpdateTodoInput,
   createTodoSchema,
-  singleTodoSchema,
+  IdOnlySchema,
   updateTodoBody,
 } from "./todos.route-schema";
 
@@ -22,8 +22,8 @@ router.get("/", async (_req, res) => {
 
 router.get(
   "/:id",
-  validateResource(setInParams(singleTodoSchema)),
-  async (req: Request<SingleTodoInput>, res: Response) => {
+  validateResource(setInParams(IdOnlySchema)),
+  async (req: Request<IdOnlyInput>, res: Response) => {
     const item = await TodosModel.findById(req.params.id);
     res.status(status.OK).json(item);
   }
@@ -40,8 +40,8 @@ router.post(
 
 router.put(
   "/:id",
-  validateResource(setIn(singleTodoSchema, updateTodoBody)),
-  async (req: Request<SingleTodoInput, {}, UpdateTodoInput>, res: Response) => {
+  validateResource(setIn(IdOnlySchema, updateTodoBody)),
+  async (req: Request<IdOnlyInput, {}, UpdateTodoInput>, res: Response) => {
     const updated = await TodosModel.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -57,8 +57,8 @@ router.put(
 
 router.delete(
   "/:id",
-  validateResource(setInParams(singleTodoSchema)),
-  async (req: Request<SingleTodoInput>, res: Response) => {
+  validateResource(setInParams(IdOnlySchema)),
+  async (req: Request<IdOnlyInput>, res: Response) => {
     const deleted = await TodosModel.findByIdAndRemove(req.params.id);
     res.sendStatus(deleted === null ? status.NOT_FOUND : status.OK);
   }
